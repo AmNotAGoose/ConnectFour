@@ -4,8 +4,8 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
 
     static Integer[][] board = new Integer[6][7];
-    static int boardWidth = board.length;
-    static int boardHeight = board[0].length;
+    static int boardWidth = board[0].length;
+    static int boardHeight = board.length;
 
     static String[] playerCharacters = {" ", "X", "O"};
 
@@ -36,7 +36,14 @@ public class Main {
         return false;
     }
 
+    public static int getValueAtGrid(int row, int column) {
+
+        return 0;
+    }
+    
     public static void placePiece(int column, int piece) {
+//        board[0][0] = 1;
+//        board[0][3] = 1;
         int row;
 
         System.out.println(board.length + " " + board[0].length);
@@ -48,7 +55,7 @@ public class Main {
             }
         }
 
-        row++;
+//        row++;
         System.out.println(row + " " + column);
         board[row][column] = piece;
     }
