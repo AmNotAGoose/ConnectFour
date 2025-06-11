@@ -1,44 +1,25 @@
-import javax.swing.*;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Main {
+    static Scanner sc = new Scanner(System.in);
+
     static Integer[][] board = new Integer[6][7];
+    static int boardWidth = board.length;
+    static int boardHeight = board[0].length;
 
-    public static void displayMessageBox(String message) {
-
-    }
-
-    public static void displayMainMenu() {
-
-    }
+    static String[] playerCharacters = {" ", "X", "O"};
 
     public static void displayBoard() {
         for (int i = 0; i < board.length; i++) {
             System.out.print("|");
             for (int j = 0; j < board[0].length; j++) {
-                switch (board[i][j]) {
-                    case 0: // empty
-                        System.out.print("  |");
-                        break;
-                    case 1: // X
-                        System.out.print(" X |");
-                        break;
-                    case 2: // O
-                        System.out.print(" O |");
-                        break;
-                    default: // error
-                        System.out.print(" ? |");
-                        break;
-                }
+                System.out.print(" " + playerCharacters[board[i][j]] + " |");
             }
             System.out.println();
         }
     }
 
-    public static void initializeBoard() {
+    public static void resetBoard() {
         // initialize board
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
@@ -47,24 +28,59 @@ public class Main {
         }
     }
 
-    public static void checkForMatches() {
+    public static boolean checkForMatches() {
         // check horizontally
         // check vertically
         // check diagonally
+
+        return false;
     }
 
-    public static void PVP() {
-        boolean p1Won = false;
-        boolean p2Won = false;
+    public static void placePiece(int column, int piece) {
+        int row;
 
+        System.out.println(board.length + " " + board[0].length);
 
+        for (row = boardHeight - 1; row >= 0; row--) {
+            if (board[row][column] == 0) {
+                System.out.println("Aaron");
+                break;
+            }
+        }
+
+        row++;
+        System.out.println(row + " " + column);
+        board[row][column] = piece;
+    }
+
+    public static void gamemodePvP() {
+        resetBoard();
+
+        int xScore = 0;
+        int oScore = 0;
+
+        boolean hasWon = false;
+
+        int curPlayer = 1;
+
+        while (!hasWon) {
+            curPlayer = curPlayer % 2 + 1;
+
+            System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
+
+            int playerColumnSelection = sc.nextInt();
+
+            if ((0 <= playerColumnSelection && playerColumnSelection < boardWidth)) {
+                placePiece(playerColumnSelection, curPlayer);
+            }
+
+            displayBoard();
+        }
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        initializeBoard();
-        displayBoard();
+//        displayBoard();
+        gamemodePvP();
     }
 }
 
