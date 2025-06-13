@@ -9,6 +9,8 @@ public class Main {
 
     static String[] playerCharacters = {" ", "X", "O"};
 
+    static int[] globalScore = {0, 0};
+
     public static void displayBoard() {
         for (int[] integers : board) {
             System.out.print("|");
@@ -17,6 +19,10 @@ public class Main {
             }
             System.out.println();
         }
+    }
+
+    public static void displayLeaderboard(int[] score) {
+        System.out.println("Current game: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
     }
 
     public static void resetBoard() {
@@ -28,11 +34,13 @@ public class Main {
         }
     }
 
-    public static boolean isInBounds(int row, int column) { // i, j NOT j, i
+    public static boolean isInBounds(int row, int column) {
+        // check if the row and column is between 0 (inclusive) and the board height (not inclusive).
+        // this considers selected columns outside of the board width, and also overflowing pieces
         return 0 <= row && row < boardHeight && 0 <= column && column < boardWidth;
     }
 
-    public static boolean checkForWinCondition() {
+    public static int checkForWinCondition() {
         for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board[0].length; column++) {
                 int cell = board[row][column];
@@ -41,40 +49,44 @@ public class Main {
                     // check horizontally
                     if (isInBounds(row, column + 3)) {
                         if (cell == board[row][column + 1] && cell == board[row][column + 2] && cell == board[row][column + 3]) {
-                            System.out.println("Hawk horizontal");
-                            return true;
+                            return cell;
                         }
                     }
 
                     // check vertically
                     if (isInBounds(row + 3, column)) {
                         if (cell == board[row + 1][column] && cell == board[row + 2][column] && cell == board[row + 3][column]) {
-                            System.out.println("Hawk vertical");
-                            return true;
+                            return cell;
                         }
                     }
 
-                    // check diagonally
+                    // check diagonal-right
                     if (isInBounds(row + 3, column + 3)) {
                         if (cell == board[row + 1][column + 1] && cell == board[row + 2][column + 2] && cell == board[row + 3][column + 3]) {
-                            System.out.println("Hawk diagonal");
-                            return true;
+                            return cell;
+                        }
+                    }
+
+
+                    // check diagonal-left
+                    if (isInBounds(row - 3, column + 3)) {
+                        if (cell == board[row - 1][column + 1] && cell == board[row - 2][column + 2] && cell == board[row - 3][column + 3]) {
+                            return cell;
                         }
                     }
                 }
             }
         }
 
-        return false;
-    }
-
-    public static int getValueAtGrid(int row, int column) {
-
         return 0;
     }
-    
-    public static void placePiece(int column, int piece) {
-        int row;
+
+    public static boolean placePiece(int column, int piece) {
+        int row = boardHeight - 1;
+
+        if (isInBounds(row, column)) { // if the row is not in bounds, return false early
+            return false;
+        }
 
         for (row = boardHeight - 1; row >= 0; row--) {
             if (board[row][column] == 0) {
@@ -83,13 +95,14 @@ public class Main {
         }
 
         board[row][column] = piece;
+
+        return true;
     }
 
     public static void gamemodePvP() {
         resetBoard();
 
-        int xScore = 0;
-        int oScore = 0;
+        int[] score = {0, 0};
 
         boolean hasWon = false;
 
@@ -98,12 +111,17 @@ public class Main {
         while (!hasWon) {
             System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
-            int playerColumnSelection = sc.nextInt();
+            int playerColumnSelection = sc.nextInt() - 1;
 
-            if ((0 <= playerColumnSelection && playerColumnSelection < boardWidth)) {
-                placePiece(playerColumnSelection, curPlayer);
+            if (placePiece(playerColumnSelection, curPlayer)) {
+                int winningPlayer = checkForWinCondition();
+                if (winningPlayer != 0) {
+                    System.out.println("Player " + playerCharacters[winningPlayer] + " won!!! good for them!!!!");
+                    score[winningPlayer - 1] += 1;
+                    displayLeaderboard(score);
+                    hasWon = true;
+                }
 
-                checkForWinCondition();
                 displayBoard();
 
                 curPlayer = curPlayer % 2 + 1;
