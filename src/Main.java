@@ -159,22 +159,19 @@ public class Main {
         }
     }
 
-    // All output from agents should be sanitized
-
     public static int userAgent() {
-        int selection = sc.nextInt() - 1;
-        return 0;
+        return sc.nextInt() - 1;
     }
 
     public static int randomAgent() {
         return 0;
     }
 
-    public static int smartAgent() {
+    public static int perfectAgent() {
         return 0;
     }
 
-    public static void gamemodePvP() {
+    public static void game(int[] agents) {
         boolean hasQuit = false;
         int[] score = {0, 0};
 
@@ -189,9 +186,13 @@ public class Main {
                 // user turn
                 System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
-                int playerColumnSelection = sc.nextInt() - 1;
+                int curPlayerColumnSelection = switch (agents[curPlayer - 1]) {
+                    case 1 -> randomAgent();
+                    case 2 -> perfectAgent();
+                    default -> userAgent();
+                };
 
-                if (placePiece(playerColumnSelection, curPlayer)) {
+                if (placePiece(curPlayerColumnSelection, curPlayer)) {
                     int winningPlayer = checkForWinCondition();
 
                     if (winningPlayer != 0) {
@@ -215,8 +216,6 @@ public class Main {
                 }
 
                 displayBoard();
-
-//                if (hasWon) break;
             }
 
             if (!promptPlayAgain()) {
@@ -229,7 +228,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        gamemodePvP();
+        game(new int[] {0, 0});
     }
 }
 
