@@ -183,9 +183,9 @@ public class Main {
 
             int curPlayer = 1;
 
-            boolean hasWon = false;
+            boolean hasEnded = false;
 
-            while (!hasWon) {
+            while (!hasEnded) {
                 // user turn
                 System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
@@ -199,13 +199,17 @@ public class Main {
                         globalScore[winningPlayer - 1] += 1;
                         displayWinMessage(winningPlayer, score);
 
-                        hasWon = true;
+                        hasEnded = true;
+                    } else if (isFull()) {
+                        displayWinMessage(0, score);
+                        hasEnded = true;
                     }
 
                     curPlayer = curPlayer % 2 + 1;
                 } else if (isFull()) {
-
-                }
+                    displayWinMessage(0, score);
+                    hasEnded = true;
+                } else
                 {
                     afterDisplayBoardMessages.add("Invalid column selection!");
                 }
