@@ -203,10 +203,9 @@ public class Main {
                     bestMove = column + 1;
                 }
             }
-
         }
 
-        // block potential winning moves (three-in-a-row)
+        // block potential opponent winning moves (three-in-a-row)
         int nextPlayerToMove = playerToMove % 2 + 1;
 
         for (int column = 0; column < boardWidth; column++) { // simulate opponent dropping pieces
@@ -222,12 +221,23 @@ public class Main {
             }
         }
 
+
         if (bestMove > 0) {
             return bestMove;
         }
 
-        // otherwise play a random move
-        return randomAgent();
+        // generate a valid random move
+        while (true) {
+            possibleBoard = copyBoard(board);
+
+            int randomMove = randomAgent();
+
+            int[] possibleCoordinate = locatePlacePieceCoordinate(randomMove - 1, possibleBoard, false);
+            if (possibleCoordinate[0] != -1){
+                bestMove = randomMove;
+                return bestMove;
+            }
+        }
     }
 
     public static void game(int[] agents) {
