@@ -21,8 +21,10 @@ public class Main {
         }
     }
 
-    public static void displayLeaderboard(int[] score) {
-        System.out.println("Current game: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
+    public static void displayWinMessage(int winner, int[] score) {
+        System.out.println("Player " + playerCharacters[winner] + " won the game. ");
+        System.out.println("Current game score: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
+        System.out.println("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
     }
 
     public static void resetBoard() {
@@ -104,30 +106,32 @@ public class Main {
 
         int[] score = {0, 0};
 
+        boolean hasQuit = false;
         boolean hasWon = false;
 
         int curPlayer = 1;
+        while (!hasQuit) {
+            while (!hasWon) {
+                System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
-        while (!hasWon) {
-            System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
+                int playerColumnSelection = sc.nextInt() - 1;
 
-            int playerColumnSelection = sc.nextInt() - 1;
+                if (placePiece(playerColumnSelection, curPlayer)) {
+                    int winningPlayer = checkForWinCondition();
+                    if (winningPlayer != 0) {
+                        score[winningPlayer - 1] += 1;
+                        globalScore[winningPlayer - 1] += 1;
+                        displayWinMessage(winningPlayer, score);
+                        hasWon = true;
+                    }
 
-            if (placePiece(playerColumnSelection, curPlayer)) {
-                int winningPlayer = checkForWinCondition();
-                if (winningPlayer != 0) {
-                    System.out.println("Player " + playerCharacters[winningPlayer] + " won!!! good for them!!!!");
-                    score[winningPlayer - 1] += 1;
-                    displayLeaderboard(score);
-                    hasWon = true;
+                    displayBoard();
+
+                    curPlayer = curPlayer % 2 + 1;
+                } else {
+                    displayBoard();
+                    System.out.println("Invalid placement!");
                 }
-
-                displayBoard();
-
-                curPlayer = curPlayer % 2 + 1;
-            } else {
-                displayBoard();
-                System.out.println("Invalid placement!");
             }
         }
     }
