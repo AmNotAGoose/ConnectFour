@@ -15,6 +15,8 @@ public class Main {
     static ArrayList<String> afterDisplayBoardMessages = new ArrayList<>(); // an arraylist of messages to print after the board is printed in displayBoard(). this streamlines printing error messages and makes it more user-friendly (the user does not need to look back and forth to see what they did wrong).
 
     public static void displayBoard() {
+        System.out.println("==============================");
+
         // display the top row of numbers
         for (int i = 1; i <= boardWidth; i++) {
             System.out.print("  " + i + " ");
@@ -47,8 +49,8 @@ public class Main {
         } else {
             afterDisplayBoardMessages.add("Player " + playerCharacters[winner] + " won the game.");
         }
-        afterDisplayBoardMessages.add("Current game score: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
-        afterDisplayBoardMessages.add("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
+        afterDisplayBoardMessages.add("Current game score: " + playerCharacters[1] + ": " + score[0] + " | " + playerCharacters[2] + ": " + score[1]);
+        afterDisplayBoardMessages.add("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + " | " + playerCharacters[2] + ": " + globalScore[1]);
     }
 
     public static void resetBoard() {
@@ -321,9 +323,9 @@ public class Main {
         boolean isRunning = true;
 
         while (isRunning){
-            System.out.println("Connect 4");
+            System.out.println("======= Connect 4 =======");
 
-            System.out.println("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
+            System.out.println("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + " | " + playerCharacters[2] + ": " + globalScore[1]);
 
             System.out.println("1 - Player vs. Player");
             System.out.println("2 - Player vs. Random AI");
