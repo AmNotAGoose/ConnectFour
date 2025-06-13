@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -11,20 +12,32 @@ public class Main {
 
     static int[] globalScore = {0, 0};
 
+    static ArrayList<String> afterDisplayBoardMessages = new ArrayList<>();
+
     public static void displayBoard() {
+        for (int i = 1; i <= boardWidth; i++) {
+            System.out.print("  " + i + " ");
+        }
+        System.out.println();
         for (int[] integers : board) {
             System.out.print("|");
-            for (int j = 0; j < board[0].length; j++) {
+            for (int j = 0; j < boardWidth; j++) {
                 System.out.print(" " + playerCharacters[integers[j]] + " |");
             }
             System.out.println();
         }
+
+        for (String message : afterDisplayBoardMessages) {
+            System.out.println(message);
+        }
+
+        afterDisplayBoardMessages = new ArrayList<>();
     }
 
     public static void displayWinMessage(int winner, int[] score) {
-        System.out.println("Player " + playerCharacters[winner] + " won the game. ");
-        System.out.println("Current game score: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
-        System.out.println("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
+        afterDisplayBoardMessages.add("Player " + playerCharacters[winner] + " won the game. ");
+        afterDisplayBoardMessages.add("Current game score: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
+        afterDisplayBoardMessages.add("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
     }
 
     public static void resetBoard() {
@@ -86,7 +99,7 @@ public class Main {
     public static boolean placePiece(int column, int piece) {
         int row = boardHeight - 1;
 
-        if (isInBounds(row, column)) { // if the row is not in bounds, return false early
+        if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
             return false;
         }
 
@@ -101,16 +114,34 @@ public class Main {
         return true;
     }
 
-    public static void gamemodePvP() {
-        resetBoard();
+    public static boolean promptPlayAgain() {
+        sc.nextLine(); // hack fix
 
+        while (true) {
+            System.out.print("Would you like to play again? (Y / N): ");
+
+            String option = sc.nextLine();
+            if (option.toLowerCase().equals("y")) {
+                return true;
+            } else if (option.toLowerCase().equals("n")) {
+                return false;
+            } else {
+                System.out.println("Invalid choice. Pick either Y for yes or N for no. ");
+            }
+        }
+    }
+
+    public static void gamemodePvP() {
+        boolean hasQuit = false;
         int[] score = {0, 0};
 
-        boolean hasQuit = false;
-        boolean hasWon = false;
-
-        int curPlayer = 1;
         while (!hasQuit) {
+            resetBoard();
+
+            int curPlayer = 1;
+
+            boolean hasWon = false;
+
             while (!hasWon) {
                 System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
@@ -118,26 +149,33 @@ public class Main {
 
                 if (placePiece(playerColumnSelection, curPlayer)) {
                     int winningPlayer = checkForWinCondition();
+
                     if (winningPlayer != 0) {
                         score[winningPlayer - 1] += 1;
                         globalScore[winningPlayer - 1] += 1;
                         displayWinMessage(winningPlayer, score);
+
                         hasWon = true;
                     }
 
-                    displayBoard();
-
                     curPlayer = curPlayer % 2 + 1;
                 } else {
-                    displayBoard();
-                    System.out.println("Invalid placement!");
+                    afterDisplayBoardMessages.add("Invalid column selection!");
                 }
+
+                displayBoard();
+            }
+
+            if (!promptPlayAgain()) {
+                System.out.println("Returning to main menu.");
+                hasQuit = true;
             }
         }
+
+
     }
 
     public static void main(String[] args) {
-//        displayBoard();
         gamemodePvP();
     }
 }
