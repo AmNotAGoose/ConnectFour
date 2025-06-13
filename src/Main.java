@@ -55,6 +55,11 @@ public class Main {
         return 0 <= row && row < boardHeight && 0 <= column && column < boardWidth;
     }
 
+    public static boolean isFull(int column) {
+        // checks if the column is full
+        return board[0][column] != 0;
+    }
+
     public static int checkForWinCondition() {
         for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board[0].length; column++) {
@@ -84,8 +89,8 @@ public class Main {
 
 
                     // check diagonal-left
-                    if (isInBounds(row - 3, column + 3)) {
-                        if (cell == board[row - 1][column + 1] && cell == board[row - 2][column + 2] && cell == board[row - 3][column + 3]) {
+                    if (isInBounds(row + 3, column - 3)) {
+                        if (cell == board[row + 1][column - 1] && cell == board[row + 2][column - 2] && cell == board[row + 3][column - 3]) {
                             return cell;
                         }
                     }
@@ -100,6 +105,7 @@ public class Main {
         int row = boardHeight - 1;
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
+            afterDisplayBoardMessages.add("The column is out of bounds.");
             return false;
         }
 
@@ -107,6 +113,11 @@ public class Main {
             if (board[row][column] == 0) {
                 break;
             }
+        }
+
+        if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
+            afterDisplayBoardMessages.add("The column is already full.");
+            return false;
         }
 
         board[row][column] = piece;
@@ -129,6 +140,21 @@ public class Main {
                 System.out.println("Invalid choice. Pick either Y for yes or N for no. ");
             }
         }
+    }
+
+    // All output from agents should be sanitized
+
+    public static int userAgent() {
+        int selection = sc.nextInt() - 1;
+        return 0;
+    }
+
+    public static int randomAgent() {
+        return 0;
+    }
+
+    public static int smartAgent() {
+        return 0;
     }
 
     public static void gamemodePvP() {
