@@ -118,11 +118,11 @@ public class Main {
         return 0;
     }
 
-    public static int[] locatePlacePieceCoordinate(int column, int[][] curBoard) {
+    public static int[] locatePlacePieceCoordinate(int column, int[][] curBoard, boolean showMessages) {
         int row = boardHeight - 1;
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
-            afterDisplayBoardMessages.add("The column is out of bounds.");
+            if (showMessages) afterDisplayBoardMessages.add("The column is out of bounds.");
             return new int[] {-1, -1};
         }
 
@@ -133,7 +133,7 @@ public class Main {
         }
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
-            afterDisplayBoardMessages.add("The column is already full.");
+            if (showMessages) afterDisplayBoardMessages.add("The column is already full.");
             return new int[] {-1, -1};
         }
 
@@ -141,7 +141,7 @@ public class Main {
     }
 
     public static boolean placePiece(int column, int piece) {
-        int[] coordinate = locatePlacePieceCoordinate(column, board);
+        int[] coordinate = locatePlacePieceCoordinate(column, board, true);
 
         if (coordinate[0] == -1) {
             return false;
@@ -168,12 +168,12 @@ public class Main {
         }
     }
 
-    public static int[][] copyBoard() {
+    public static int[][] copyBoard(int[][] boardToCopy) {
         int[][] newBoard = new int[boardHeight][boardWidth];
 
         for (int i = 0; i < boardHeight; i++) {
             for (int j = 0; j < boardWidth; j++) {
-                newBoard[i][j] = board[i][j];
+                newBoard[i][j] = boardToCopy[i][j];
             }
         }
 
@@ -189,24 +189,45 @@ public class Main {
     }
 
     public static int perfectAgent(int playerToMove) {
-        int[][] possibleBoard = copyBoard();
-
-        // block potential winning moves
-
-
+        int[][] possibleBoard;
+        int bestMove = -1;
 
         // play the winning move if there is one
         for (int column = 0; column < boardWidth; column++) {
-            possibleBoard = copyBoard();
+            possibleBoard = copyBoard(board);
 
-            int[] possibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard);
-            possibleBoard[possibleCoordinate[0]][possibleCoordinate[1]] = playerToMove;
-            if (checkForWinCondition(possibleBoard) != 0) {
-                return column;
+            int[] possibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard, false);
+            if (possibleCoordinate[0] != -1){
+                possibleBoard[possibleCoordinate[0]][possibleCoordinate[1]] = playerToMove;
+                if (checkForWinCondition(possibleBoard) != 0) {
+                    bestMove = column + 1;
+                }
+            }
+
+        }
+
+        // block potential winning moves (three-in-a-row)
+        int nextPlayerToMove = playerToMove % 2 + 1;
+
+        for (int column = 0; column < boardWidth; column++) { // simulate opponent dropping pieces
+            possibleBoard = copyBoard(board);
+
+            // play the winning move as the opponent if there is one
+            int[] opponentPossibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard, false);
+            if (opponentPossibleCoordinate[0] != -1){
+                possibleBoard[opponentPossibleCoordinate[0]][opponentPossibleCoordinate[1]] = nextPlayerToMove;
+                if (checkForWinCondition(possibleBoard) != 0) {
+                    bestMove = column + 1;
+                }
             }
         }
 
-        return 1;
+        if (bestMove > 0) {
+            return bestMove;
+        }
+
+        // otherwise play a random move
+        return randomAgent();
     }
 
     public static void game(int[] agents) {
