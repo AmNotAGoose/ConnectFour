@@ -181,6 +181,7 @@ public class Main {
     }
 
     public static int userAgent() {
+        System.out.print("Enter the column number you wish to place your piece in: ");
         return sc.nextInt(); // validation is streamlined further down
     }
 
@@ -252,8 +253,10 @@ public class Main {
 
             boolean hasEnded = false;
 
+            displayBoard();
+
             while (!hasEnded) {
-                System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
+                System.out.println("Player " + playerCharacters[curPlayer] + " to move.");
 
                 int curPlayerColumnSelection = switch (agents[curPlayer - 1]) {
                     case 1 -> randomAgent();
