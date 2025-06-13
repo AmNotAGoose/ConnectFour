@@ -18,11 +18,13 @@ public class Main {
         for (int i = 1; i <= boardWidth; i++) {
             System.out.print("  " + i + " ");
         }
+
         System.out.println();
-        for (int[] integers : board) {
+
+        for (int[] row : board) {
             System.out.print("|");
             for (int j = 0; j < boardWidth; j++) {
-                System.out.print(" " + playerCharacters[integers[j]] + " |");
+                System.out.print(" " + playerCharacters[row[j]] + " |");
             }
             System.out.println();
         }
@@ -35,7 +37,11 @@ public class Main {
     }
 
     public static void displayWinMessage(int winner, int[] score) {
-        afterDisplayBoardMessages.add("Player " + playerCharacters[winner] + " won the game. ");
+        if (winner == 0) {
+            afterDisplayBoardMessages.add("The game ended in a tie.");
+        } else {
+            afterDisplayBoardMessages.add("Player " + playerCharacters[winner] + " won the game.");
+        }
         afterDisplayBoardMessages.add("Current game score: " + playerCharacters[1] + ": " + score[0] + ", " + playerCharacters[2] + ": " + score[1]);
         afterDisplayBoardMessages.add("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
     }
@@ -55,9 +61,20 @@ public class Main {
         return 0 <= row && row < boardHeight && 0 <= column && column < boardWidth;
     }
 
-    public static boolean isFull(int column) {
-        // checks if the column is full
-        return board[0][column] != 0;
+    public static boolean isFull() {
+        // checks if the board is full
+        boolean full = true;
+
+        for (int[] row : board) {
+            for (int cell : row) {
+                if (cell == 0) {
+                    full = false;
+                    break;
+                }
+            }
+        }
+
+        return full;
     }
 
     public static int checkForWinCondition() {
@@ -169,6 +186,7 @@ public class Main {
             boolean hasWon = false;
 
             while (!hasWon) {
+                // user turn
                 System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
                 int playerColumnSelection = sc.nextInt() - 1;
@@ -185,11 +203,16 @@ public class Main {
                     }
 
                     curPlayer = curPlayer % 2 + 1;
-                } else {
+                } else if (isFull()) {
+
+                }
+                {
                     afterDisplayBoardMessages.add("Invalid column selection!");
                 }
 
                 displayBoard();
+
+//                if (hasWon) break;
             }
 
             if (!promptPlayAgain()) {
