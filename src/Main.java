@@ -248,11 +248,12 @@ public class Main {
             }
         }
 
+        // if the best move is valid, return it
         if (bestMove > 0) {
             return bestMove;
         }
 
-        // generate a valid random move if there is no winning or blocking move to be made
+        // otherwise, generate a valid random move if there is no winning or blocking move to be made
         return randomAgent(); // validation of the random number is handled within randomAgent
     }
 
