@@ -1,7 +1,8 @@
 # Connect Four
 
 # General logic
-
+1. The user goes through the menu and can choose between Player vs. Player, Player vs. 
+2. 
 
 # Key functions and variables
 
@@ -32,8 +33,11 @@
 - checks if the cell is empty, then it skips checking this cell to reduce useless checks
 - returns the winner if there is one, otherwise returns 0.
 
-- 
+## Menu functions
 
+**void main(String[] args)**
+- isRunning - keeps the while loop running until the user inputs 0
+- The program keeps running until the user enters one of the menu options, then runs the **game** function based on which agents the user chose.
 
 ## Display functions
 
