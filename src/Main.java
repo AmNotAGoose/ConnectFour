@@ -30,21 +30,35 @@ public class Main {
 
     public static boolean checkForWinCondition() {
 
+        // check horizontally
+        for (int[] row : board) {
+            int totalHorizontalInARow = 1;
+            int prevCell = 0;
 
+            for (int cell : row) {
+                if (prevCell != 0 && prevCell == cell) {
+                    totalHorizontalInARow++;
+                } else {
+                    totalHorizontalInARow = 1;
+                }
 
+                if (totalHorizontalInARow == 4) {
+                    return true;
+                }
 
-
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-
-
-                // check horizontally
-
-                // check vertically
-
-                // check diagonally
+                prevCell = cell;
             }
         }
+
+//        for (int i = 0; i < board.length; i++) {
+//            for (int j = 0; j < board[0].length; j++) {
+//                // check horizontally
+//
+//                // check vertically
+//
+//                // check diagonally
+//            }
+//        }
 
         return false;
     }
@@ -83,8 +97,11 @@ public class Main {
 
             if ((0 <= playerColumnSelection && playerColumnSelection < boardWidth)) {
                 placePiece(playerColumnSelection, curPlayer);
-                curPlayer = curPlayer % 2 + 1;
+
+                checkForWinCondition();
                 displayBoard();
+
+                curPlayer = curPlayer % 2 + 1;
             } else {
                 displayBoard();
                 System.out.println("Invalid placement!");
