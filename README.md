@@ -43,6 +43,7 @@
 
 **void displayWinMessage(int winner, int[] score)**
 - winner - stores who won the game (0 for tie, 1 for P1, 2 for P2 / AI)
+- score - displays the score 
 - Adds the win message to **afterDisplayBoardMessages** to be printed after the final board
 
 **void promptPlayAgain()**
