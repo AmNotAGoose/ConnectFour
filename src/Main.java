@@ -118,12 +118,12 @@ public class Main {
         return 0;
     }
 
-    public static boolean placePiece(int column, int piece) {
+    public static int[] locatePlacePieceCoordinate(int column) {
         int row = boardHeight - 1;
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
             afterDisplayBoardMessages.add("The column is out of bounds.");
-            return false;
+            return new int[] {-1, -1};
         }
 
         for (row = boardHeight - 1; row >= 0; row--) {
@@ -134,11 +134,20 @@ public class Main {
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
             afterDisplayBoardMessages.add("The column is already full.");
+            return new int[] {-1, -1};
+        }
+
+        return new int[] {row, column};
+    }
+
+    public static boolean placePiece(int column, int piece) {
+        int[] coordinate = locatePlacePieceCoordinate(column);
+
+        if (coordinate[0] == -1) {
             return false;
         }
 
-        board[row][column] = piece;
-
+        board[coordinate[0]][coordinate[1]] = piece;
         return true;
     }
 
@@ -160,14 +169,24 @@ public class Main {
     }
 
     public static int userAgent() {
-        return sc.nextInt() - 1;
+        return sc.nextInt(); // validation is streamlined further down
     }
 
     public static int randomAgent() {
-        return 0;
+        return (int)(Math.random() * (boardWidth - 1 + 1) + 1);
     }
 
     public static int perfectAgent() {
+        int[][] possibleBoard = new int[6][7];
+
+        // block potential winning moves
+        for (int i = 0; i < boardWidth; i++) {
+
+        }
+
+
+        // play the winning move if there is one
+
         return 0;
     }
 
@@ -192,7 +211,7 @@ public class Main {
                     default -> userAgent();
                 };
 
-                if (placePiece(curPlayerColumnSelection, curPlayer)) {
+                if (placePiece(curPlayerColumnSelection - 1, curPlayer)) {
                     int winningPlayer = checkForWinCondition();
 
                     if (winningPlayer != 0) {
@@ -228,7 +247,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        game(new int[] {0, 0});
+        game(new int[] {0, 1});
     }
 }
 
