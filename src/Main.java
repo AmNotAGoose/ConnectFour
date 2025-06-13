@@ -61,11 +61,11 @@ public class Main {
         return 0 <= row && row < boardHeight && 0 <= column && column < boardWidth;
     }
 
-    public static boolean isFull() {
+    public static boolean isFull(int[][] curBoard) {
         // checks if the board is full
         boolean full = true;
 
-        for (int[] row : board) {
+        for (int[] row : curBoard) {
             for (int cell : row) {
                 if (cell == 0) {
                     full = false;
@@ -77,29 +77,29 @@ public class Main {
         return full;
     }
 
-    public static int checkForWinCondition() {
-        for (int row = 0; row < board.length; row++) {
-            for (int column = 0; column < board[0].length; column++) {
-                int cell = board[row][column];
+    public static int checkForWinCondition(int[][] curBoard) {
+        for (int row = 0; row < curBoard.length; row++) {
+            for (int column = 0; column < curBoard[0].length; column++) {
+                int cell = curBoard[row][column];
 
                 if (!(cell == 0)) {
                     // check horizontally
                     if (isInBounds(row, column + 3)) {
-                        if (cell == board[row][column + 1] && cell == board[row][column + 2] && cell == board[row][column + 3]) {
+                        if (cell == curBoard[row][column + 1] && cell == curBoard[row][column + 2] && cell == curBoard[row][column + 3]) {
                             return cell;
                         }
                     }
 
                     // check vertically
                     if (isInBounds(row + 3, column)) {
-                        if (cell == board[row + 1][column] && cell == board[row + 2][column] && cell == board[row + 3][column]) {
+                        if (cell == curBoard[row + 1][column] && cell == curBoard[row + 2][column] && cell == curBoard[row + 3][column]) {
                             return cell;
                         }
                     }
 
                     // check diagonal-right
                     if (isInBounds(row + 3, column + 3)) {
-                        if (cell == board[row + 1][column + 1] && cell == board[row + 2][column + 2] && cell == board[row + 3][column + 3]) {
+                        if (cell == curBoard[row + 1][column + 1] && cell == board[row + 2][column + 2] && cell == curBoard[row + 3][column + 3]) {
                             return cell;
                         }
                     }
@@ -107,7 +107,7 @@ public class Main {
 
                     // check diagonal-left
                     if (isInBounds(row + 3, column - 3)) {
-                        if (cell == board[row + 1][column - 1] && cell == board[row + 2][column - 2] && cell == board[row + 3][column - 3]) {
+                        if (cell == curBoard[row + 1][column - 1] && cell == curBoard[row + 2][column - 2] && cell == curBoard[row + 3][column - 3]) {
                             return cell;
                         }
                     }
@@ -118,7 +118,7 @@ public class Main {
         return 0;
     }
 
-    public static int[] locatePlacePieceCoordinate(int column) {
+    public static int[] locatePlacePieceCoordinate(int column, int[][] curBoard) {
         int row = boardHeight - 1;
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
@@ -127,7 +127,7 @@ public class Main {
         }
 
         for (row = boardHeight - 1; row >= 0; row--) {
-            if (board[row][column] == 0) {
+            if (curBoard[row][column] == 0) {
                 break;
             }
         }
@@ -141,7 +141,7 @@ public class Main {
     }
 
     public static boolean placePiece(int column, int piece) {
-        int[] coordinate = locatePlacePieceCoordinate(column);
+        int[] coordinate = locatePlacePieceCoordinate(column, board);
 
         if (coordinate[0] == -1) {
             return false;
@@ -168,6 +168,18 @@ public class Main {
         }
     }
 
+    public static int[][] copyBoard() {
+        int[][] newBoard = new int[boardHeight][boardWidth];
+
+        for (int i = 0; i < boardHeight; i++) {
+            for (int j = 0; j < boardWidth; j++) {
+                newBoard[i][j] = board[i][j];
+            }
+        }
+
+        return newBoard;
+    }
+
     public static int userAgent() {
         return sc.nextInt(); // validation is streamlined further down
     }
@@ -176,18 +188,25 @@ public class Main {
         return (int)(Math.random() * (boardWidth - 1 + 1) + 1);
     }
 
-    public static int perfectAgent() {
-        int[][] possibleBoard = new int[6][7];
+    public static int perfectAgent(int playerToMove) {
+        int[][] possibleBoard = copyBoard();
 
         // block potential winning moves
-        for (int i = 0; i < boardWidth; i++) {
 
-        }
 
 
         // play the winning move if there is one
+        for (int column = 0; column < boardWidth; column++) {
+            possibleBoard = copyBoard();
 
-        return 0;
+            int[] possibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard);
+            possibleBoard[possibleCoordinate[0]][possibleCoordinate[1]] = playerToMove;
+            if (checkForWinCondition(possibleBoard) != 0) {
+                return column;
+            }
+        }
+
+        return 1;
     }
 
     public static void game(int[] agents) {
@@ -207,12 +226,12 @@ public class Main {
 
                 int curPlayerColumnSelection = switch (agents[curPlayer - 1]) {
                     case 1 -> randomAgent();
-                    case 2 -> perfectAgent();
+                    case 2 -> perfectAgent(curPlayer);
                     default -> userAgent();
                 };
 
                 if (placePiece(curPlayerColumnSelection - 1, curPlayer)) {
-                    int winningPlayer = checkForWinCondition();
+                    int winningPlayer = checkForWinCondition(board);
 
                     if (winningPlayer != 0) {
                         score[winningPlayer - 1] += 1;
@@ -220,13 +239,13 @@ public class Main {
                         displayWinMessage(winningPlayer, score);
 
                         hasEnded = true;
-                    } else if (isFull()) {
+                    } else if (isFull(board)) {
                         displayWinMessage(0, score);
                         hasEnded = true;
                     }
 
                     curPlayer = curPlayer % 2 + 1;
-                } else if (isFull()) {
+                } else if (isFull(board)) {
                     displayWinMessage(0, score);
                     hasEnded = true;
                 } else
@@ -247,7 +266,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        game(new int[] {0, 1});
+        game(new int[] {0, 2});
     }
 }
 
