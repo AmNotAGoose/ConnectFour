@@ -1,43 +1,48 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-// fix git test
+
 public class Main {
     static Scanner sc = new Scanner(System.in);
 
-    static int[][] board = new int[6][7];
+    static int[][] board = new int[6][7]; // a 2D integer array representing the board.
     static int boardWidth = board[0].length;
     static int boardHeight = board.length;
 
-    static String[] playerCharacters = {" ", "X", "O"};
+    static String[] playerCharacters = {" ", "X", "O"}; // an array of characters using the index to convert integers to user-friendly characters
 
-    static int[] globalScore = {0, 0};
+    static int[] globalScore = {0, 0}; // an array representing the total score player one and two has won based on the index.
 
-    static ArrayList<String> afterDisplayBoardMessages = new ArrayList<>();
+    static ArrayList<String> afterDisplayBoardMessages = new ArrayList<>(); // an arraylist of messages to print after the board is printed in displayBoard(). this streamlines printing error messages and makes it more user-friendly (the user does not need to look back and forth to see what they did wrong).
 
     public static void displayBoard() {
+        // display the top row of numbers
         for (int i = 1; i <= boardWidth; i++) {
             System.out.print("  " + i + " ");
         }
 
         System.out.println();
 
+        // display the grid
         for (int[] row : board) {
             System.out.print("|");
             for (int j = 0; j < boardWidth; j++) {
-                System.out.print(" " + playerCharacters[row[j]] + " |");
+                System.out.print(" " + playerCharacters[row[j]] + " |"); // use the playerCharacters array to convert the data to human-readable characters.
             }
             System.out.println();
         }
 
+        // display any messages that need to be printed after the board
         for (String message : afterDisplayBoardMessages) {
             System.out.println(message);
         }
 
+        // clear the messages
         afterDisplayBoardMessages = new ArrayList<>();
     }
 
     public static void displayWinMessage(int winner, int[] score) {
-        if (winner == 0) {
+        // display the game win message.
+        if (winner == 0) { // 0 means the game ends in a tie.
             afterDisplayBoardMessages.add("The game ended in a tie.");
         } else {
             afterDisplayBoardMessages.add("Player " + playerCharacters[winner] + " won the game.");
@@ -99,7 +104,7 @@ public class Main {
 
                     // check diagonal-right
                     if (isInBounds(row + 3, column + 3)) {
-                        if (cell == curBoard[row + 1][column + 1] && cell == board[row + 2][column + 2] && cell == curBoard[row + 3][column + 3]) {
+                        if (cell == curBoard[row + 1][column + 1] && cell == curBoard[row + 2][column + 2] && cell == curBoard[row + 3][column + 3]) {
                             return cell;
                         }
                     }
@@ -123,7 +128,7 @@ public class Main {
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
             if (showMessages) afterDisplayBoardMessages.add("The column is out of bounds.");
-            return new int[] {-1, -1};
+            return new int[] {-1}; // return -1 if there is an error
         }
 
         for (row = boardHeight - 1; row >= 0; row--) {
@@ -134,13 +139,14 @@ public class Main {
 
         if (!isInBounds(row, column)) { // if the row is not in bounds, return false early
             if (showMessages) afterDisplayBoardMessages.add("The column is already full.");
-            return new int[] {-1, -1};
+            return new int[] {-1}; // return -1 if there is an error
         }
 
         return new int[] {row, column};
     }
 
     public static boolean placePiece(int column, int piece) {
+        // places the piece on the global board at a specific column
         int[] coordinate = locatePlacePieceCoordinate(column, board, true);
 
         if (coordinate[0] == -1) {
@@ -152,7 +158,8 @@ public class Main {
     }
 
     public static boolean promptPlayAgain() {
-        sc.nextLine(); // hack fix
+        // prompts the user again until a valid choice is selected.
+        sc.nextLine();
 
         while (true) {
             System.out.print("Would you like to play again? (Y / N): ");
@@ -169,6 +176,8 @@ public class Main {
     }
 
     public static int[][] copyBoard(int[][] boardToCopy) {
+        // create a deep copy of the board.
+
         int[][] newBoard = new int[boardHeight][boardWidth];
 
         for (int i = 0; i < boardHeight; i++) {
@@ -180,16 +189,33 @@ public class Main {
         return newBoard;
     }
 
+    // agents return a move
+
     public static int userAgent() {
-        System.out.print("Enter the column number you wish to place your piece in: ");
-        return sc.nextInt(); // validation is streamlined further down
+        System.out.print("Enter the column number you wish to place your piece in: "); // prompt the user here
+        return sc.nextInt(); // validation is streamlined further down, so it is fine
     }
 
     public static int randomAgent() {
-        return (int)(Math.random() * (boardWidth - 1 + 1) + 1);
+        // generates a random number within the range
+
+        int randomMove;
+
+        // validation must be done here for non-user input agents since it would disrupt the user experience if streamlined further down (will print error messages the user did not cause)
+        while (true) {
+            randomMove = (int)(Math.random() * (boardWidth - 1 + 1) + 1);
+
+            int[] possibleCoordinate = locatePlacePieceCoordinate(randomMove - 1, board, false);
+            if (possibleCoordinate[0] != -1){
+                break; // if the coordinate is valid, select it by breaking the random generator.
+            }
+        }
+
+        return randomMove;
     }
 
     public static int perfectAgent(int playerToMove) {
+        // this agent is still susceptible to forking, but it follows the 2 rules posted on the document.
         int[][] possibleBoard;
         int bestMove = -1;
 
@@ -197,7 +223,7 @@ public class Main {
         int nextPlayerToMove = playerToMove % 2 + 1;
 
         for (int column = 0; column < boardWidth; column++) { // simulate opponent dropping pieces
-            possibleBoard = copyBoard(board);
+            possibleBoard = copyBoard(board); // reset testing board for simulation
 
             // play the winning move as the opponent if there is one
             int[] opponentPossibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard, false);
@@ -227,17 +253,7 @@ public class Main {
         }
 
         // generate a valid random move if there is no winning or blocking move to be made
-        while (true) {
-            possibleBoard = copyBoard(board);
-
-            int randomMove = randomAgent();
-
-            int[] possibleCoordinate = locatePlacePieceCoordinate(randomMove - 1, possibleBoard, false);
-            if (possibleCoordinate[0] != -1){
-                bestMove = randomMove;
-                return bestMove;
-            }
-        }
+        return randomAgent(); // validation of the random number is handled within randomAgent
     }
 
     public static void game(int agentOne, int agentTwo) {
@@ -247,7 +263,7 @@ public class Main {
         int[] agents = {agentOne, agentTwo};
 
         while (!hasQuit) {
-            resetBoard();
+            resetBoard(); // reset the board before every game.
 
             int curPlayer = 1;
 
@@ -256,6 +272,12 @@ public class Main {
             displayBoard();
 
             while (!hasEnded) {
+                if (isFull(board)) { // check if there is a draw
+                    displayWinMessage(0, score);
+                    displayBoard(); // display the board since the rest of the loop will not run.
+                    break;
+                }
+
                 System.out.println("Player " + playerCharacters[curPlayer] + " to move.");
 
                 int curPlayerColumnSelection = switch (agents[curPlayer - 1]) {
@@ -264,7 +286,7 @@ public class Main {
                     default -> userAgent();
                 };
 
-                if (placePiece(curPlayerColumnSelection - 1, curPlayer)) {
+                if (placePiece(curPlayerColumnSelection - 1, curPlayer)) { // place a piece if possible
                     int winningPlayer = checkForWinCondition(board);
 
                     if (winningPlayer != 0) {
@@ -278,10 +300,7 @@ public class Main {
                         hasEnded = true;
                     }
 
-                    curPlayer = curPlayer % 2 + 1;
-                } else if (isFull(board)) {
-                    displayWinMessage(0, score);
-                    hasEnded = true;
+                    curPlayer = curPlayer % 2 + 1; // select the next player
                 } else
                 {
                     afterDisplayBoardMessages.add("Invalid column selection!");
@@ -295,8 +314,6 @@ public class Main {
                 hasQuit = true;
             }
         }
-
-
     }
 
     public static void main(String[] args) {
@@ -305,12 +322,14 @@ public class Main {
         while (isRunning){
             System.out.println("Connect 4");
 
+            System.out.println("Lifetime score: " + playerCharacters[1] + ": " + globalScore[0] + ", " + playerCharacters[2] + ": " + globalScore[1]);
+
             System.out.println("1 - Player vs. Player");
             System.out.println("2 - Player vs. Random AI");
             System.out.println("3 - Player vs. Perfect AI");
             System.out.println("0 - Exit the session");
 
-            System.out.println("Enter an option: ");
+            System.out.print("Enter an option: ");
 
             int gamemode = sc.nextInt();
 
