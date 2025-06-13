@@ -28,37 +28,29 @@ public class Main {
         }
     }
 
+    public static boolean isInBounds(int row, int column) { // i, j NOT j, i
+        return 0 < row && row < boardHeight && 0 < column && column < boardWidth;
+    }
+
     public static boolean checkForWinCondition() {
+        for (int row = 0; row < board.length; row++) {
+            for (int column = 0; column < board[0].length; column++) {
+                int cell = board[row][column];
 
-        // check horizontally
-        for (int[] row : board) {
-            int totalHorizontalInARow = 1;
-            int prevCell = 0;
+                if (!(cell == 0)) {
+                    // check horizontally
+                    if (isInBounds(row, column + 3)) {
+                        if (cell == board[row][column + 1] && cell == board[row][column + 2] && cell == board[row][column + 3]) {
+                            return true;
+                        }
+                    }
 
-            for (int cell : row) {
-                if (prevCell != 0 && prevCell == cell) {
-                    totalHorizontalInARow++;
-                } else {
-                    totalHorizontalInARow = 1;
+                    // check vertically
+
+                    // check diagonally
                 }
-
-                if (totalHorizontalInARow == 4) {
-                    return true;
-                }
-
-                prevCell = cell;
             }
         }
-
-//        for (int i = 0; i < board.length; i++) {
-//            for (int j = 0; j < board[0].length; j++) {
-//                // check horizontally
-//
-//                // check vertically
-//
-//                // check diagonally
-//            }
-//        }
 
         return false;
     }
