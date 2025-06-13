@@ -29,7 +29,7 @@ public class Main {
     }
 
     public static boolean isInBounds(int row, int column) { // i, j NOT j, i
-        return 0 < row && row < boardHeight && 0 < column && column < boardWidth;
+        return 0 <= row && row < boardHeight && 0 <= column && column < boardWidth;
     }
 
     public static boolean checkForWinCondition() {
@@ -41,13 +41,26 @@ public class Main {
                     // check horizontally
                     if (isInBounds(row, column + 3)) {
                         if (cell == board[row][column + 1] && cell == board[row][column + 2] && cell == board[row][column + 3]) {
+                            System.out.println("Hawk horizontal");
                             return true;
                         }
                     }
 
                     // check vertically
+                    if (isInBounds(row + 3, column)) {
+                        if (cell == board[row + 1][column] && cell == board[row + 2][column] && cell == board[row + 3][column]) {
+                            System.out.println("Hawk vertical");
+                            return true;
+                        }
+                    }
 
                     // check diagonally
+                    if (isInBounds(row + 3, column + 3)) {
+                        if (cell == board[row + 1][column + 1] && cell == board[row + 2][column + 2] && cell == board[row + 3][column + 3]) {
+                            System.out.println("Hawk diagonal");
+                            return true;
+                        }
+                    }
                 }
             }
         }
