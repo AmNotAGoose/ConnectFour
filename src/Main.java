@@ -192,19 +192,6 @@ public class Main {
         int[][] possibleBoard;
         int bestMove = -1;
 
-        // play the winning move if there is one
-        for (int column = 0; column < boardWidth; column++) {
-            possibleBoard = copyBoard(board);
-
-            int[] possibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard, false);
-            if (possibleCoordinate[0] != -1){
-                possibleBoard[possibleCoordinate[0]][possibleCoordinate[1]] = playerToMove;
-                if (checkForWinCondition(possibleBoard) != 0) {
-                    bestMove = column + 1;
-                }
-            }
-        }
-
         // block potential opponent winning moves (three-in-a-row)
         int nextPlayerToMove = playerToMove % 2 + 1;
 
@@ -221,12 +208,24 @@ public class Main {
             }
         }
 
+        // play the winning move if there is one
+        for (int column = 0; column < boardWidth; column++) {
+            possibleBoard = copyBoard(board);
+
+            int[] possibleCoordinate = locatePlacePieceCoordinate(column, possibleBoard, false);
+            if (possibleCoordinate[0] != -1){
+                possibleBoard[possibleCoordinate[0]][possibleCoordinate[1]] = playerToMove;
+                if (checkForWinCondition(possibleBoard) != 0) {
+                    bestMove = column + 1;
+                }
+            }
+        }
 
         if (bestMove > 0) {
             return bestMove;
         }
 
-        // generate a valid random move
+        // generate a valid random move if there is no winning or blocking move to be made
         while (true) {
             possibleBoard = copyBoard(board);
 
@@ -240,9 +239,11 @@ public class Main {
         }
     }
 
-    public static void game(int[] agents) {
+    public static void game(int agentOne, int agentTwo) {
         boolean hasQuit = false;
         int[] score = {0, 0};
+
+        int[] agents = {agentOne, agentTwo};
 
         while (!hasQuit) {
             resetBoard();
@@ -252,7 +253,6 @@ public class Main {
             boolean hasEnded = false;
 
             while (!hasEnded) {
-                // user turn
                 System.out.println("Player " + playerCharacters[curPlayer] + " to move (Enter the column number): ");
 
                 int curPlayerColumnSelection = switch (agents[curPlayer - 1]) {
@@ -297,8 +297,38 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        game(new int[] {0, 2});
+        boolean isRunning = true;
+
+        while (isRunning){
+            System.out.println("Connect 4");
+
+            System.out.println("1 - Player vs. Player");
+            System.out.println("2 - Player vs. Random AI");
+            System.out.println("3 - Player vs. Perfect AI");
+            System.out.println("0 - Exit the session");
+
+            System.out.println("Enter an option: ");
+
+            int gamemode = sc.nextInt();
+
+            switch (gamemode) {
+                case 1:
+                    game(0, 0);
+                    break;
+                case 2:
+                    game(0, 1);
+                    break;
+                case 3:
+                    game(0, 2);
+                    break;
+                case 0:
+                    isRunning = false;
+                    break;
+                default:
+                    System.out.println("That is not a valid gamemode. Press enter to retry.");
+            }
+        }
+
+        System.out.println("Thank you for playing Connect 4. Goodbye.");
     }
 }
-
-
