@@ -51,10 +51,15 @@
 **int[][] board = new int[6][7];** - A 2D integer array representing the board.
 - **boardHeight** - stores the height of the board for quick use
 - **boardWidth** - stores the width of the board for quick use
+
+
 **String[] playerCharacters = {" ", "X", "O"}** - An array of characters using the index to convert integers to user-friendly characters
+
+
 **int[] globalScore = {0, 0}** - An array representing the total score for both players based on the index.
 
-**boolean isInBounds(int row, int column)**t
+
+**boolean isInBounds(int row, int column)**
 - returns whether or not the row and column is a valid index for a cell within the bounds of the array by checking it against **boardHeight** and **boardWidth**
 
 **boolean isFull(int[][] curBoard)**
