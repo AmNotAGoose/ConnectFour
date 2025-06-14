@@ -13,7 +13,11 @@
 - Agents return a move based on different conditions (ex. user input (id of 0), random (id of 1), perfect algorithm (id of 2)) and is how **game()** receives input from each player.
 
 **int userAgent()** - prompts the user for their chosen column and returns it
+
+
 **int randomAgent()** - keeps generating a random number until it finds a valid column (one that is not filled) and returns it
+
+
 **int perfectAgent(int playerToMove)**
 - Considers the best move based on the given **playerToMove** (either 1 or 2)
 - Creates a copy of the board and simulates dropping pieces on it (resetting it after each simulation) as the opposing piece. If it is able to block a winning move, it saves the column as **bestMove**
