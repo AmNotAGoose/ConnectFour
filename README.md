@@ -1,8 +1,14 @@
 # Connect Four
 
 # General logic
+
+### Structure
+- Separated into three types of functions: UI/display level, game logic, and player input
+
+### Entry (game() is discussed later)
 **void main(String[] args)**
 - A while loop is created which will break if **isRunning** becomes false
+- The global score is displayed
 - The user goes through the menu and can choose between Player vs. Player (1), Player vs. Random AI (2), Player vs. Perfect AI (3), or to quit the program (0).
 - When any of the gamemodes are chosen (1-3), the **game()** function is launched with the two agents' ID.
   - Player vs. Player - agent 0 (user input) and agent 0 (user input)
@@ -17,7 +23,7 @@
 ### Agents
 - Agents return a move based on different conditions (ex. user input (id of 0), random (id of 1), perfect algorithm (id of 2)) and is how **game()** receives input from each player.
 
-**int userAgent()** - prompts the user for their chosen column and returns it
+**int userAgent()** - prompts the user for their chosen column and returns it. Input validation not nessecary here since it is handled in **game()**
 
 
 **int randomAgent()** - keeps generating a random number until it finds a valid column (one that is not filled) and returns it
