@@ -1,11 +1,41 @@
 # Connect Four
 
 # General logic
-1. The user goes through the menu and can choose between Player vs. Player (1), Player vs. Random AI (2), Player vs. Perfect AI (3), or to quit the program (0).
-2. Each method of  
+1. The user goes through the menu and can choose between Player vs. Player (1), Player vs. Random AI (2), Player vs. Perfect AI (3), or to quit the program (0). The user is constantly prompted until a valid choice is chosen.
+2. When any of the gamemodes are chosen (1-3), the **game** function is launched with the two agents
 3. 
 
 # Key functions and variables
+
+## Logical functions (main game loop and agents)
+
+### Agents
+- Agents return a move based on different conditions (ex. user input (id of 0), random (id of 1), perfect algorithm (id of 2)) and is how **game()** receives input from each player.
+
+**int userAgent()** - prompts the user for their chosen column and returns it
+**int randomAgent()** - keeps generating a random number until it finds a valid column (one that is not filled) and returns it
+**int perfectAgent(int playerToMove)**
+- Considers the best move based on the given **playerToMove** (either 1 or 2)
+- Creates a copy of the board and simulates dropping pieces on it (resetting it after each simulation) as the opposing piece. If it is able to block a winning move, it saves the column as **bestMove**
+- Resets the copy of the board, then simulates dropping **playerToMove**'s pieces on it. If a winning state is achieved after a move, it is saved and overrides **bestMove** (because it is better to win instantly than block a win)
+- If neither of these cases results in a best move, a random move with **randomAgent()** is chosen instead. 
+
+### Game loop
+**void game(int agentOne, int agentTwo)**
+- The two agents' ID are put into an array called **agents**. Player 1's agent is in index 0 while player 2's index is in index 1.
+- Creates a while loop which is broken when **hasQuit** becomes true
+- Reset the board and set the **curPlayer** to 1
+- Display the board initially to show an empty board state
+- Create a while loop which will break when **hasEnded** becomes true
+- Check if the board ends in a tie, immediately display the board and break the loop if so (this is to prevent duplicate tie messages)
+- Print the board and the current player character using **playerCharacters[curPlayer]**
+- Use the current player to get move of the current player using **agents** array.
+- Place the piece.
+  - If successful, check for win conditions and break if one is found by setting **hasEnded** to true. Increment and print the global and local score. Change **curPlayer** to the next player.
+  - If unsuccessful, add a general error message to the **afterDisplayBoardMessages** and display the board. Do not alter **curPlayer** since their turn was not successful.
+- After the while loop, once it has been broken (a win/tie condition has been met), prompt the user if they want to play another game (N) or return to the menu (Y). The repeated checking is handled in **promptPlayAgain().**
+  - If true (the user wants to play again), do nothing and the initial while loop will recreate the game again (resetting everything except for the score)
+  - If false, break the first while loop by setting **hasQuit** to true and print a goodbye message. 
 
 ## Board functions
 
