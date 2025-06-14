@@ -3,7 +3,7 @@
 # General logic
 
 ### Structure
-- Separated into three types of functions: UI/display level, game logic, and player input
+- Separated into three types of functions: UI/display level, game logic, and player input ("agents")
 
 ### Entry (game() is discussed later)
 **void main(String[] args)**
