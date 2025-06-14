@@ -26,7 +26,7 @@
 
 ### Game loop
 **void game(int agentOne, int agentTwo)**
-- The two agents' ID are put into an array called **agents**. Player 1's agent is in index 0 while player 2's index is in index 1.
+- The two agents' ID are put into an array called **agents**. Player 1's agent is in index 0 while player 2's agent is in index 1.
 - Creates a while loop which is broken when **hasQuit** becomes true
 - Reset the board and set the **curPlayer** to 1
 - Display the board initially to show an empty board state
@@ -35,10 +35,10 @@
 - Print the board and the current player character using **playerCharacters[curPlayer]**
 - Use the current player to get move of the current player using **agents** array.
 - Place the piece.
-  - If successful, check for win conditions and break if one is found by setting **hasEnded** to true. Increment and print the global and local score. Change **curPlayer** to the next player.
-  - If unsuccessful, add a general error message to the **afterDisplayBoardMessages** and display the board. Do not alter **curPlayer** since their turn was not successful and they should try again until it is. Since agents that the user doesn't control are always sanatized and won't return an invalid value, this won't disrupt the user experience as they will never trigger this condition.
+  - If successful, check for win conditions and break if one is found by setting **hasEnded** to true. Increment and print the global and local scores. Change **curPlayer** to the next player.
+  - If unsuccessful, add a general error message to the **afterDisplayBoardMessages** and display the board. Do not alter **curPlayer** since their turn was not successful and they should try again until it is. Since agents that the user doesn't control are always sanitized and won't return an invalid value, this won't disrupt the user experience, as they will never trigger this condition.
 - After the while loop, once it has been broken (a win/tie condition has been met), prompt the user if they want to play another game (N) or return to the menu (Y). The repeated checking is handled in **promptPlayAgain().**
-  - If true (the user wants to play again), do nothing and the initial while loop will recreate the game again (resetting everything except for the score)
+  - If true (the user wants to play again), do nothing, and the initial while loop will recreate the game again (resetting everything except for the score)
   - If false, break the first while loop by setting **hasQuit** to true and print a goodbye message. 
 
 ## Board functions
@@ -56,8 +56,8 @@
 - determines whether or not the inputted board is full (no cell has 0)
 
 **int[] locatePlacePieceCoordinate(int column, int[][] curBoard, boolean showMessages)**
-- simulates the dropping of a piece into **curBoard** by starting from the last row of the board and continuing to go up until an empty cell is found.
-- the cell row and column are returned, or, if the column is out of bounds or full, {-1}.
+- Simulates the dropping of a piece into **curBoard** by starting from the last row of the board and continuing to go up until an empty cell is found.
+- The cell row and column are returned, or, if the column is out of bounds or full, {-1}.
 
 **boolean placePiece(int column, int piece)**
 - uses **locatePlacePieceCoordinate()** to find and place a piece on the bottom of the grid.
@@ -65,8 +65,8 @@
 
 **int checkForWinCondition(int[][] curBoard)**
 - Iterates over every cell in **curBoard** in the 2D array using a nested for loop, and checks 3 units to the right, left, diagonally-down-right, and diagonally-down-left if doing so won't make the program go out of bounds.
-- checks if the cell is empty, then it skips checking this cell to reduce useless checks
-- returns the winner if there is one, otherwise returns 0.
+- Checks if the cell is empty, then it skips checking this cell to reduce useless checks
+- Returns the winner if there is one, otherwise returns 0.
 
 ## Menu functions
 
@@ -86,6 +86,6 @@
 - Adds the win message to **afterDisplayBoardMessages** to be printed after the final board
 
 **void promptPlayAgain()**
-- Prompts the user for if they want to play again using a while loop, only breaking once a valid choice is reached.
+- Prompts the user if they want to play again using a while loop, only breaking once a valid choice is reached.
 
 
