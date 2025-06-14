@@ -32,7 +32,7 @@
 - Use the current player to get move of the current player using **agents** array.
 - Place the piece.
   - If successful, check for win conditions and break if one is found by setting **hasEnded** to true. Increment and print the global and local score. Change **curPlayer** to the next player.
-  - If unsuccessful, add a general error message to the **afterDisplayBoardMessages** and display the board. Do not alter **curPlayer** since their turn was not successful.
+  - If unsuccessful, add a general error message to the **afterDisplayBoardMessages** and display the board. Do not alter **curPlayer** since their turn was not successful and they should try again until it is. Since agents that the user doesn't control are always sanatized and won't return an invalid value, this won't disrupt the user experience as they will never trigger this condition.
 - After the while loop, once it has been broken (a win/tie condition has been met), prompt the user if they want to play another game (N) or return to the menu (Y). The repeated checking is handled in **promptPlayAgain().**
   - If true (the user wants to play again), do nothing and the initial while loop will recreate the game again (resetting everything except for the score)
   - If false, break the first while loop by setting **hasQuit** to true and print a goodbye message. 
