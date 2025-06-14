@@ -1,5 +1,7 @@
 # Connect Four
 
+A Connect Four implementation in Java with three different game modes.
+
 # General logic
 
 ### Structure
