@@ -66,29 +66,24 @@
 
 
 **boolean isInBounds(int row, int column)**
-- returns whether or not the row and column is a valid index for a cell within the bounds of the array by checking it against **boardHeight** and **boardWidth**
+- returns whether or not the row and column is a valid index for a cell within the bounds of the array by checking it against **boardHeight** and **boardWidth** (row is greater than or equal to zero but less than **boardHeight**, column is greater than or equal to zero but less than **boardWidth**)
 
 **boolean isFull(int[][] curBoard)**
-- determines whether or not the inputted board is full (no cell has 0)
+- Returns whether or not the inputted board is full (no cell has 0) by iterating over every cell and returning false if it encounters a zero at any point.
 
 **int[] locatePlacePieceCoordinate(int column, int[][] curBoard, boolean showMessages)**
 - Simulates the dropping of a piece into **curBoard** by starting from the last row of the board and continuing to go up until an empty cell is found.
 - The cell row and column are returned, or, if the column is out of bounds or full, {-1}.
 
 **boolean placePiece(int column, int piece)**
-- uses **locatePlacePieceCoordinate()** to find and place a piece on the bottom of the grid.
-- returns whether or not the placing succeeded
+- Uses **locatePlacePieceCoordinate()** to find and place a piece on the bottom of the grid.
+- Returns whether or not the placing succeeded
 
 **int checkForWinCondition(int[][] curBoard)**
 - Iterates over every cell in **curBoard** in the 2D array using a nested for loop, and checks 3 units to the right, left, diagonally-down-right, and diagonally-down-left if doing so won't make the program go out of bounds.
-- Checks if the cell is empty, then it skips checking this cell to reduce useless checks
+  - It accesses cells in a row by adding 1, 2, and 3 to the row or column index of the initial cell. 
+  - Skips doing this check if the initial cell is empty, since there would not be a match no matter what (there can at most be three units in a row if this is the case) 
 - Returns the winner if there is one, otherwise returns 0.
-
-## Menu functions
-
-**void main(String[] args)**
-- isRunning - keeps the while loop running until the user inputs 0
-- The program keeps running until the user enters one of the menu options, then runs the **game** function based on which agents the user chose.
 
 ## Display functions
 
@@ -103,5 +98,3 @@
 
 **void promptPlayAgain()**
 - Prompts the user if they want to play again using a while loop, only breaking once a valid choice is reached.
-
-
