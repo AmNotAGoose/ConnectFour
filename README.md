@@ -1,8 +1,9 @@
 # Connect Four
 
 # General logic
-1. The user goes through the menu and can choose between Player vs. Player, Player vs. 
-2. 
+1. The user goes through the menu and can choose between Player vs. Player (1), Player vs. Random AI (2), Player vs. Perfect AI (3), or to quit the program (0).
+2. Each method of  
+3. 
 
 # Key functions and variables
 
@@ -14,7 +15,7 @@
 **String[] playerCharacters = {" ", "X", "O"}** - An array of characters using the index to convert integers to user-friendly characters
 **int[] globalScore = {0, 0}** - An array representing the total score for both players based on the index.
 
-**boolean isInBounds(int row, int column)**
+**boolean isInBounds(int row, int column)**t
 - returns whether or not the row and column is a valid index for a cell within the bounds of the array by checking it against **boardHeight** and **boardWidth**
 
 **boolean isFull(int[][] curBoard)**
