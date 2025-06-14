@@ -1,9 +1,14 @@
 # Connect Four
 
 # General logic
-1. The user goes through the menu and can choose between Player vs. Player (1), Player vs. Random AI (2), Player vs. Perfect AI (3), or to quit the program (0). The user is constantly prompted until a valid choice is chosen.
-2. When any of the gamemodes are chosen (1-3), the **game** function is launched with the two agents
-3. 
+**void main(String[] args)**
+- A while loop is created which will break if **isRunning** becomes false
+- The user goes through the menu and can choose between Player vs. Player (1), Player vs. Random AI (2), Player vs. Perfect AI (3), or to quit the program (0).
+- When any of the gamemodes are chosen (1-3), the **game()** function is launched with the two agents' ID.
+  - Player vs. Player - agent 0 (user input) and agent 0 (user input)
+  - Player vs. Random AI - agent 0 (user input) and agent 1 (random AI)
+  - Player vs. Perfect AI - agent 0 (user input) and agent 2 (perfect AI)
+- If an invalid gamemode is chosen (not 0-3), the default case of the switch case statement is reached. It will print an error message and do nothing else, allowing the loop to re-run and the options to be displayed again.
 
 # Key functions and variables
 
