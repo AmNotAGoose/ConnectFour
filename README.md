@@ -1,6 +1,6 @@
 # Connect Four
 
-A Connect Four implementation in Java with three different game modes.
+A Connect Four implementation in Java with three different game modes. The Main class is in /src/Main.java
 
 # General logic
 
